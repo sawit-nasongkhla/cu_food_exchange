@@ -12,9 +12,21 @@ app.use(express.json());
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/nutrientDB_v2";
 
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.error("Connection Error:", err));
+async function connectDB() {
+  if (mongoose.connection.readyState === 1) return;
+  await mongoose.connect(MONGODB_URI, { maxPoolSize: 5 });
+  console.log("MongoDB Connected");
+}
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("Connection Error:", err);
+    res.status(500).json({ success: false, message: "เชื่อมต่อฐานข้อมูลไม่สำเร็จ" });
+  }
+});
 
 app.get('/', (req, res) => res.send("Welcome to Nutrient_exchange!"));
 
