@@ -6,6 +6,12 @@
 - Frontend: https://cufoodexchange-frontend.vercel.app
 - Backend API: https://cufoodexchange.vercel.app
 
+## Screenshots
+
+| Compare foods | Exchange results | Add food |
+|---|---|---|
+| ![Compare foods tab](docs/screenshots/compare-food.jpg) | ![Exchange results with category bowl](docs/screenshots/compare-results.jpg) | ![Add food tab](docs/screenshots/add-food.jpg) |
+
 ---
 
 ## English
