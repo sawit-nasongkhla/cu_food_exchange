@@ -34,11 +34,12 @@
             background: white; border-radius: 24px; padding: 32px 44px 40px;
             width: 100%; max-width: 580px;
             box-shadow: 0 4px 6px var(--shadow), 0 20px 60px rgba(26,77,46,0.08), 0 0 0 1px rgba(200,230,212,0.6);
-            position: relative; overflow: hidden;
+            position: relative; overflow: visible;
         }
         .card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
             background: linear-gradient(90deg, var(--green-mid), var(--green-light), var(--green-mid));
+            border-radius: 24px 24px 0 0;
         }
         .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
         .header-icon {
@@ -135,9 +136,22 @@
         .subcat-tag.milk-high  { background: #fdf0ed; color: #c0392b; border: 1px solid #f5c6be; }
 
         #result { margin-top: 24px; }
-        .result-header { background: var(--green-pale); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; }
+        .result-header {
+            background: var(--green-pale); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px;
+            position: sticky; top: 0; z-index: 6;
+            box-shadow: 0 8px 18px rgba(26,77,46,0.08);
+        }
         .result-header h3 { font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; color: var(--green-dark); margin-bottom: 4px; }
         .result-header p { font-size: 13px; color: var(--text-mid); }
+        .result-list {
+            max-height: min(70vh, 640px);
+            overflow-y: auto;
+            padding-right: 4px;
+            margin-top: 4px;
+        }
+        .result-list::-webkit-scrollbar { width: 8px; }
+        .result-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+        .result-list::-webkit-scrollbar-track { background: transparent; }
         .result-search-wrap { position: relative; margin-bottom: 8px; }
         .result-search-wrap input {
             width: 100%; padding: 10px 16px 10px 38px; border: 1.5px solid var(--border); border-radius: 10px;
@@ -822,9 +836,11 @@
                 + "</div>"
                 + "<div class='result-search-wrap'><input type='text' id='resultSearch' placeholder='ค้นหารายการแลกเปลี่ยน...' oninput='filterResults()'></div>"
                 + "<div class='result-count' id='resultCount'>แสดง 0 รายการ</div>"
-                + "<div id='noResultMsg' class='no-result-text' style='display:none'>ไม่พบรายการที่ค้นหา</div>";
+                + "<div id='noResultMsg' class='no-result-text' style='display:none'>ไม่พบรายการที่ค้นหา</div>"
+                + "<div id='resultList' class='result-list'></div>";
 
             resultDiv.innerHTML = html;
+            var resultList = document.getElementById("resultList");
 
             // filter exchanges ตาม activeSubcats
             var exchanges = data.exchanges;
@@ -892,7 +908,7 @@
                     if (bowlsRow) itemEl.querySelector(".volume-section").appendChild(bowlsRow);
                 }
 
-                resultDiv.appendChild(itemEl);
+                resultList.appendChild(itemEl);
             });
 
         } catch(e) {
